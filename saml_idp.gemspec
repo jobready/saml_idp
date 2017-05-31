@@ -40,20 +40,19 @@ defaults in a Production environment. Post any issues you to github.
   s.add_dependency('activesupport', '>= 2.3.18')
   s.add_dependency('uuid', '~> 2.3')
   s.add_dependency('builder', '~> 3.0')
-  s.add_dependency('httparty', '~> 0.14')
-  s.add_dependency('nokogiri', '>= 1.6.2')
+  s.add_dependency('httparty', '~> 0.11.0')
+  s.add_dependency('nokogiri', '~> 1.5.11')
 
   s.add_development_dependency('rake', '~> 10.4.2')
-  s.add_development_dependency('simplecov', '~> 0.12')
   s.add_development_dependency('rspec', '~> 2.5')
   s.add_development_dependency('ruby-saml', '~> 1.3')
   s.add_development_dependency('rails', '~> 2.3.18')
-  s.add_development_dependency('capybara', '~> 2.11.0')
-  s.add_development_dependency('timecop', '~> 0.8')
 
   s.add_development_dependency('public_suffix', '~> 1.3.3')
   s.add_development_dependency('addressable', '~> 2.3.8')
   s.add_development_dependency('mime-types', '~> 1.24')
-
+  s.add_development_dependency('xpath', '~> 2.0.0')
+  s.add_development_dependency('json', '~> 1.8.3')
+  
 end
 
