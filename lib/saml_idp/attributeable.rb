@@ -1,6 +1,8 @@
 module SamlIdp
   module Attributeable
-    extend ActiveSupport::Concern
+    def self.included(base)
+      base.extend ClassMethods
+    end
 
     def initialize(attributes = {})
       self.attributes = attributes

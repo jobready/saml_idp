@@ -11,7 +11,7 @@ module SamlIdp
     ) }
 
     before do
-      Time.stub now: Time.parse("Jul 31 2013")
+      Time.stub :now => Time.parse("Jul 31 2013")
     end
 
     it "builds a legit raw XML file" do

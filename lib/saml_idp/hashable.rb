@@ -1,6 +1,8 @@
 module SamlIdp
   module Hashable
-    extend ActiveSupport::Concern
+    def self.included(base)
+      base.extend ClassMethods
+    end
 
     def hashables
       self.class.hashables

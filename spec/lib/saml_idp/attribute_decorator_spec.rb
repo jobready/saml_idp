@@ -1,10 +1,10 @@
 require 'spec_helper'
 module SamlIdp
   describe AttributeDecorator do
-    subject { described_class.new name: name,
-              friendly_name: friendly_name,
-              name_format: name_format,
-              values: values
+    subject { described_class.new :name => name,
+              :friendly_name => friendly_name,
+              :name_format => name_format,
+              :values => values
     }
     let(:name) { nil }
     let(:friendly_name) { nil }

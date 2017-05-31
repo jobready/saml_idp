@@ -117,11 +117,12 @@ module SamlIdp
     module ClassMethods
       def self.module_method(name, default = nil)
         default ||= name
-        define_method "#{name}_method" do |new_method_name = nil|
-          instance_variable_set("@#{name}", new_method_name) if new_method_name
+
+        define_method "#{name}_method" do
           instance_variable_get("@#{name}") || default
         end
       end
+
       module_method :raw
       module_method :digest
       module_method :algorithm

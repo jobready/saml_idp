@@ -24,8 +24,7 @@ describe SamlIdp::Controller do
       validate_saml_request
     end
 
-    let(:principal) { double email_address: "foo@example.com" }
-    end
+    let(:principal) { double :email_address => "foo@example.com" }
 
     it "should create a SAML Response" do
       saml_response = encode_response(principal)

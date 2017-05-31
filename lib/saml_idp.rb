@@ -1,4 +1,12 @@
 # encoding: utf-8
+
+#https://ruby-doc.org/stdlib-2.2.6/libdoc/base64/rdoc/Base64.html#method-i-strict_encode64
+module Base64
+  def strict_encode64(bin)
+    [bin].pack("m0")
+  end
+end
+
 module SamlIdp
   require 'active_support/all'
   require 'saml_idp/saml_response'
@@ -66,7 +74,7 @@ module Saml
 
     class Document < Nokogiri::XML::Document
       def signed?
-        !!xpath("//ds:Signature", ds: signature_namespace).first
+        !!xpath("//ds:Signature", :ds => signature_namespace).first
       end
 
       def valid_signature?(fingerprint)
@@ -84,7 +92,7 @@ module Saml
 
       def to_xml
         super(
-          save_with: Nokogiri::XML::Node::SaveOptions::AS_XML | Nokogiri::XML::Node::SaveOptions::NO_DECLARATION
+          :save_with => Nokogiri::XML::Node::SaveOptions::AS_XML | Nokogiri::XML::Node::SaveOptions::NO_DECLARATION
         ).strip
       end
     end
