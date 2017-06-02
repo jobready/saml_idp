@@ -66,7 +66,7 @@ module Saml
 
     class Document < Nokogiri::XML::Document
       def signed?
-        !!xpath("//ds:Signature", ds: signature_namespace).first
+        !!xpath("//ds:Signature", :ds => signature_namespace).first
       end
 
       def valid_signature?(fingerprint)
@@ -84,7 +84,7 @@ module Saml
 
       def to_xml
         super(
-          save_with: Nokogiri::XML::Node::SaveOptions::AS_XML | Nokogiri::XML::Node::SaveOptions::NO_DECLARATION
+          :save_with => Nokogiri::XML::Node::SaveOptions::AS_XML | Nokogiri::XML::Node::SaveOptions::NO_DECLARATION
         ).strip
       end
     end

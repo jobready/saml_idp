@@ -13,7 +13,7 @@ module SamlIdp
     attribute :acs_url
     attribute :assertion_consumer_logout_service_url
 
-    delegate :config, to: :SamlIdp
+    delegate :config, :to => :SamlIdp
 
     def valid?
       attributes.present?

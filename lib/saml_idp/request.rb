@@ -22,9 +22,9 @@ module SamlIdp
 
     attr_accessor :raw_xml
 
-    delegate :config, to: :SamlIdp
+    delegate :config, :to => :SamlIdp
     private :config
-    delegate :xpath, to: :document
+    delegate :xpath, :to => :document
     private :xpath
 
     def initialize(raw_xml = "")
@@ -119,20 +119,20 @@ module SamlIdp
     end
 
     def service_provider
-      @_service_provider ||= ServiceProvider.new((service_provider_finder[issuer] || {}).merge(identifier: issuer))
+      @_service_provider ||= ServiceProvider.new((service_provider_finder[issuer] || {}).merge(:identifier => issuer))
     end
 
     def issuer
-      @_issuer ||= xpath("//saml:Issuer", saml: assertion).first.try(:content)
+      @_issuer ||= xpath("//saml:Issuer", :saml => assertion).first.try(:content)
       @_issuer if @_issuer.present?
     end
 
     def name_id
-      @_name_id ||= xpath("//saml:NameID", saml: assertion).first.try(:content)
+      @_name_id ||= xpath("//saml:NameID", :saml => assertion).first.try(:content)
     end
 
     def session_index
-      @_session_index ||= xpath("//samlp:SessionIndex", samlp: samlp).first.try(:content)
+      @_session_index ||= xpath("//samlp:SessionIndex", :samlp => samlp).first.try(:content)
     end
 
     def document
@@ -142,18 +142,18 @@ module SamlIdp
 
     def authn_context_node
       @_authn_context_node ||= xpath("//samlp:AuthnRequest/samlp:RequestedAuthnContext/saml:AuthnContextClassRef",
-        samlp: samlp,
-        saml: assertion).first
+        :samlp => samlp,
+        :saml => assertion).first
     end
     private :authn_context_node
 
     def authn_request
-      @_authn_request ||= xpath("//samlp:AuthnRequest", samlp: samlp).first
+      @_authn_request ||= xpath("//samlp:AuthnRequest", :samlp => samlp).first
     end
     private :authn_request
 
     def logout_request
-      @_logout_request ||= xpath("//samlp:LogoutRequest", samlp: samlp).first
+      @_logout_request ||= xpath("//samlp:LogoutRequest", :samlp => samlp).first
     end
     private :logout_request
 
