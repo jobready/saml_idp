@@ -91,11 +91,11 @@ module SamlIdp
           result = getter.call(principal)
         else
           message = getter.to_s.underscore
-          result = principal.public_send(message) if principal.respond_to?(message)
+          result = principal.send(message) if principal.respond_to?(message)
         end
       elsif getter.nil?
         message = friendly_name.to_s.underscore
-        result = principal.public_send(message) if principal.respond_to?(message)
+        result = principal.send(message) if principal.respond_to?(message)
       end
       Array(result)
     end
@@ -111,7 +111,7 @@ module SamlIdp
       if getter.respond_to? :call
         getter
       else
-        lambda { |principal| principal.public_send getter.to_s }
+        lambda { |principal| principal.send getter.to_s }
       end
     end
     private :name_id_getter

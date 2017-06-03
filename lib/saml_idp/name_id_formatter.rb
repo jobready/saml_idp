@@ -41,7 +41,7 @@ module SamlIdp
       if getter_val.respond_to?(:call)
         getter_val
       else
-        lambda { |p| p.public_send getter_val.to_s }
+        lambda { |p| p.send getter_val.to_s }
       end
     end
     private :build_getter

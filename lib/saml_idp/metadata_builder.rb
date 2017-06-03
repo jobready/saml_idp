@@ -93,7 +93,7 @@ module SamlIdp
     def build_contact(el)
       el.ContactPerson :contactType => "technical" do |contact|
         %w[company given_name sur_name telephone mail_to_string].each do |section|
-          section_value = technical_contact.public_send(section)
+          section_value = technical_contact.send(section)
           contact.Company section_value if section_value.present?
         end
       end
@@ -151,7 +151,7 @@ module SamlIdp
       technical_contact
     ].each do |delegatable|
       define_method(delegatable) do
-        configurator.public_send delegatable
+        configurator.send delegatable
       end
       private delegatable
     end

@@ -118,13 +118,11 @@ module SamlIdp
       def self.module_method(name, default = nil)
         default ||= name
 
-        class_eval <<-EVAL
-          def #{"m"}_method(new_method_name = nil)
-            instance_variable_set("@#{name}", new_method_name) if new_method_name
-            instance_variable_get("@#{name}") || default
-          end
-        EVAL
+        define_method "#{name}_method" do
+          instance_variable_get("@#{name}") || default
+        end
       end
+
       module_method :raw
       module_method :digest
       module_method :algorithm
