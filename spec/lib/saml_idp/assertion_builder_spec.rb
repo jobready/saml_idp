@@ -12,7 +12,6 @@ module SamlIdp
       Saml::XML::Namespaces::AuthnContext::ClassRef::PASSWORD
     }
     let(:expiry) { 3*60*60 }
-    end
     subject { described_class.new(
       reference_id,
       issuer_uri,
@@ -36,10 +35,10 @@ module SamlIdp
       before do
         config.name_id.formats = {
           "1.1" => {
-            email_address: ->(p) { "foo@example.com" }
+            :email_address => lambda{ |p| "foo@example.com" }
           }
         }
-        SamlIdp.stub(config: config)
+        SamlIdp.stub(:config => config)
       end
 
       it "doesn't include attribute statement" do
@@ -52,7 +51,7 @@ module SamlIdp
     describe "with principal.asserted_attributes" do
       it "delegates attributes to principal" do
         Principal = Struct.new(:email, :asserted_attributes)
-        principal = Principal.new('foo@example.com', { emailAddress: { getter: :email } })
+        principal = Principal.new('foo@example.com', { :emailAddress => { :getter => :email } })
         builder = described_class.new(
           reference_id,
           issuer_uri,

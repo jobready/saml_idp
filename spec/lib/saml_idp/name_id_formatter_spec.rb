@@ -4,7 +4,7 @@ module SamlIdp
     subject { described_class.new list }
 
     describe "with one item" do
-      let(:list) { { email_address: ->() { "foo@example.com" } } }
+      let(:list) { { :email_address => lambda { "foo@example.com" } } }
 
       it "has a valid all" do
         subject.all.should == ["urn:oasis:names:tc:SAML:2.0:nameid-format:emailAddress"]
@@ -15,8 +15,8 @@ module SamlIdp
     describe "with hash describing versions" do
       let(:list) {
         {
-          "1.1" => { email_address: -> {} },
-          "2.0" => { undefined: -> {} },
+          "1.1" => { :email_address => lambda {} },
+          "2.0" => { :undefined => lambda {} },
         }
       }
 

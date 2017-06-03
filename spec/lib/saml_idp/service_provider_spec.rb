@@ -9,7 +9,7 @@ module SamlIdp
     it { should_not be_valid }
 
     describe "with attributes" do
-      let(:attributes) { { fingerprint: fingerprint, metadata_url: metadata_url } }
+      let(:attributes) { { :fingerprint => fingerprint, :metadata_url => metadata_url } }
       let(:fingerprint) { Default::FINGERPRINT }
       let(:metadata_url) { "http://localhost:3000/metadata" }
 
