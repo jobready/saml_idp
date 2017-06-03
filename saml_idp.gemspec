@@ -37,7 +37,6 @@ Similarly, please see the README about certificates - you should avoid using the
 defaults in a Production environment. Post any issues you to github.
   INST
 
-  s.add_dependency('activesupport', '>= 2.3.18')
   s.add_dependency('uuid', '~> 2.3')
   s.add_dependency('builder', '~> 3.0')
   s.add_dependency('httparty', '~> 0.11.0')
@@ -46,7 +45,7 @@ defaults in a Production environment. Post any issues you to github.
   s.add_development_dependency('rake', '~> 10.4.2')
   s.add_development_dependency('rspec', '~> 2.5')
   s.add_development_dependency('ruby-saml', '~> 1.3')
-  s.add_dependency('rails', '~> 2.3.18')
+  s.add_development_dependency('rails', '~> 2.3.18')
 
   s.add_development_dependency('public_suffix', '~> 1.3.3')
   s.add_development_dependency('addressable', '~> 2.3.8')

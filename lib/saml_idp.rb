@@ -8,8 +8,6 @@ module Base64
 end
 
 module SamlIdp
-  gem 'rails', '2.3.18'
-  require 'initializer'
   require 'active_support/all'
   require 'saml_idp/saml_response'
   require 'saml_idp/xml_security'

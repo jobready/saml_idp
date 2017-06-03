@@ -4,6 +4,9 @@ $LOAD_PATH.unshift File.dirname(__FILE__)
 
 STDERR.puts("Running Specs under Ruby Version #{RUBY_VERSION}")
 
+gem 'rails', '2.3.18'
+require 'initializer'
+
 require 'rspec'
 
 require 'ruby-saml'
