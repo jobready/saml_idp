@@ -43,7 +43,7 @@ gAbBqA04wh64JhhfG69oTBwqwj3imlWF8+jDzV9RNNw=
 -----END RSA PRIVATE KEY-----
 EOS
     SERVICE_PROVIDER = {
-      fingerprint: FINGERPRINT
+      :fingerprint => FINGERPRINT
     }
   end
 end

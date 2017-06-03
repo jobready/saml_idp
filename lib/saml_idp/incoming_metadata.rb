@@ -5,7 +5,7 @@ module SamlIdp
     include Hashable
     attr_accessor :raw
 
-    delegate :xpath, to: :document
+    delegate :xpath, :to => :document
     private :xpath
 
     def initialize(raw = "")
@@ -19,8 +19,8 @@ module SamlIdp
     def sign_assertions
       doc = xpath(
         "//md:SPSSODescriptor",
-        ds: signature_namespace,
-        md: metadata_namespace
+        :ds => signature_namespace,
+        :md => metadata_namespace
       ).first
       doc ? !!doc["WantAssertionsSigned"] : false
     end
@@ -33,11 +33,11 @@ module SamlIdp
 
     def contact_person
       {
-        given_name: given_name,
-        surname: surname,
-        company: company,
-        telephone_number: telephone_number,
-        email_address: email_address
+        :given_name => given_name,
+        :surname => surname,
+        :company => company,
+        :telephone_number => telephone_number,
+        :email_address => email_address
       }
     end
     hashable :contact_person
@@ -45,8 +45,8 @@ module SamlIdp
     def signing_certificate
       xpath(
         "//md:SPSSODescriptor/md:KeyDescriptor[@use='signing']/ds:KeyInfo/ds:X509Data/ds:X509Certificate",
-        ds: signature_namespace,
-        md: metadata_namespace
+        :ds => signature_namespace,
+        :md => metadata_namespace
       ).first.try(:content).to_s
     end
     hashable :signing_certificate
@@ -54,8 +54,8 @@ module SamlIdp
     def encryption_certificate
       xpath(
         "//md:SPSSODescriptor/md:KeyDescriptor[@use='encryption']/ds:KeyInfo/ds:X509Data/ds:X509Certificate",
-        ds: signature_namespace,
-        md: metadata_namespace
+        :ds => signature_namespace,
+        :md => metadata_namespace
       ).first.try(:content).to_s
     end
     hashable :encryption_certificate
@@ -63,7 +63,7 @@ module SamlIdp
     def single_logout_services
       xpath(
         "//md:SPSSODescriptor/md:SingleLogoutService",
-        md: metadata_namespace
+        :md => metadata_namespace
       ).reduce({}) do |hash, el|
         hash[el["Binding"].to_s.split(":").last] = el["Location"]
         hash
@@ -74,10 +74,10 @@ module SamlIdp
     def name_id_formats
       xpath(
         "//md:SPSSODescriptor/md:NameIDFormat",
-        md: metadata_namespace
+        :md => metadata_namespace
       ).reduce(Set.new) do |set, el|
-        props = el.content.to_s.match /urn:oasis:names:tc:SAML:(?<version>\S+):nameid-format:(?<name>\S+)/
-        set << props[:name].to_s.underscore if props[:name].present?
+        props = el.content.to_s.match /urn:oasis:names:tc:SAML:(\S+):nameid-format:(\S+)/
+        set << props[2].to_s.underscore if props.present? && props[2].present?
         set
       end
     end
@@ -86,49 +86,49 @@ module SamlIdp
     def assertion_consumer_services
       xpath(
         "//md:SPSSODescriptor/md:AssertionConsumerService",
-        md: metadata_namespace
+        :md => metadata_namespace
       ).sort_by { |el| el["index"].to_i }.reduce([]) do |array, el|
-        props = el["Binding"].to_s.match /urn:oasis:names:tc:SAML:(?<version>\S+):bindings:(?<name>\S+)/
-        array << { binding: props[:name], location: el["Location"], default: !!el["isDefault"] }
+        props = el["Binding"].to_s.match /urn:oasis:names:tc:SAML:(\S+):bindings:(\S+)/
+        array << { :binding => Array(props)[2], :location => el["Location"], :default => !!el["isDefault"] }
         array
       end
     end
     hashable :assertion_consumer_services
 
     def given_name
-      contact_person_document.xpath("//md:GivenName", md: metadata_namespace).first.try(:content).to_s
+      contact_person_document.xpath("//md:GivenName", :md => metadata_namespace).first.try(:content).to_s
     end
 
     def surname
-      contact_person_document.xpath("//md:SurName", md: metadata_namespace).first.try(:content).to_s
+      contact_person_document.xpath("//md:SurName", :md => metadata_namespace).first.try(:content).to_s
     end
 
     def company
-      contact_person_document.xpath("//md:Company", md: metadata_namespace).first.try(:content).to_s
+      contact_person_document.xpath("//md:Company", :md => metadata_namespace).first.try(:content).to_s
     end
 
     def telephone_number
-      contact_person_document.xpath("//md:TelephoneNumber", md: metadata_namespace).first.try(:content).to_s
+      contact_person_document.xpath("//md:TelephoneNumber", :md => metadata_namespace).first.try(:content).to_s
     end
 
     def email_address
-      contact_person_document.xpath("//md:EmailAddress", md: metadata_namespace).first.try(:content).to_s.gsub("mailto:", "")
+      contact_person_document.xpath("//md:EmailAddress", :md => metadata_namespace).first.try(:content).to_s.gsub("mailto:", "")
     end
 
     def role_descriptor_document
-      @role_descriptor ||= xpath("//md:RoleDescriptor", md: metadata_namespace).first
+      @role_descriptor ||= xpath("//md:RoleDescriptor", :md => metadata_namespace).first
     end
 
     def service_provider_descriptor_document
-      @service_provider_descriptor ||= xpath("//md:SPSSODescriptor", md: metadata_namespace).first
+      @service_provider_descriptor ||= xpath("//md:SPSSODescriptor", :md => metadata_namespace).first
     end
 
     def idp_descriptor_document
-      @idp_descriptor ||= xpath("//md:IDPSSODescriptor", md: metadata_namespace).first
+      @idp_descriptor ||= xpath("//md:IDPSSODescriptor", :md => metadata_namespace).first
     end
 
     def contact_person_document
-      @contact_person_document ||= xpath("//md:ContactPerson", md: metadata_namespace).first
+      @contact_person_document ||= xpath("//md:ContactPerson", :md => metadata_namespace).first
     end
 
     def metadata_namespace

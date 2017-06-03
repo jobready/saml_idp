@@ -7,10 +7,10 @@ require 'saml_idp/request'
 require 'saml_idp/logout_response_builder'
 module SamlIdp
   module Controller
-    extend ActiveSupport::Concern
-
-    included do
-      helper_method :saml_acs_url if respond_to? :helper_method
+    def self.included(base)
+      base.class_eval do
+        helper_method :saml_acs_url if respond_to? :helper_method
+      end
     end
 
     attr_accessor :algorithm

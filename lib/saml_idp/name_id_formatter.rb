@@ -31,8 +31,8 @@ module SamlIdp
       name = key_val.first.to_s.underscore
       getter = build_getter key_val.last || name
       {
-        name: "urn:oasis:names:tc:SAML:#{version}:nameid-format:#{name.camelize(:lower)}",
-        getter: getter
+        :name => "urn:oasis:names:tc:SAML:#{version}:nameid-format:#{name.camelize(:lower)}",
+        :getter => getter
       }
     end
     private :build
@@ -41,7 +41,7 @@ module SamlIdp
       if getter_val.respond_to?(:call)
         getter_val
       else
-        ->(p) { p.public_send getter_val.to_s }
+        lambda { |p| p.public_send getter_val.to_s }
       end
     end
     private :build_getter
