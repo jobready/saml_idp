@@ -32,14 +32,14 @@ module SamlIdp
     def raw
       builder = Builder::XmlMarkup.new
       builder.tag! "ds:SignedInfo", "xmlns:ds" => "http://www.w3.org/2000/09/xmldsig#" do |signed_info|
-        signed_info.tag!("ds:CanonicalizationMethod", Algorithm: "http://www.w3.org/2001/10/xml-exc-c14n#") {}
-        signed_info.tag!("ds:SignatureMethod", Algorithm: signature_method ) {}
-        signed_info.tag! "ds:Reference", URI: reference_string do |reference|
+        signed_info.tag!("ds:CanonicalizationMethod", :Algorithm => "http://www.w3.org/2001/10/xml-exc-c14n#") {}
+        signed_info.tag!("ds:SignatureMethod", :Algorithm => signature_method ) {}
+        signed_info.tag! "ds:Reference", :URI => reference_string do |reference|
           reference.tag! "ds:Transforms" do |transforms|
-            transforms.tag!("ds:Transform", Algorithm: "http://www.w3.org/2000/09/xmldsig#enveloped-signature") {}
-            transforms.tag!("ds:Transform", Algorithm: "http://www.w3.org/2001/10/xml-exc-c14n#") {}
+            transforms.tag!("ds:Transform", :Algorithm => "http://www.w3.org/2000/09/xmldsig#enveloped-signature") {}
+            transforms.tag!("ds:Transform", :Algorithm => "http://www.w3.org/2001/10/xml-exc-c14n#") {}
           end
-          reference.tag!("ds:DigestMethod", Algorithm: digest_method) {}
+          reference.tag!("ds:DigestMethod", :Algorithm => digest_method) {}
           reference.tag! "ds:DigestValue", digest_value
         end
       end

@@ -7,10 +7,10 @@ require 'saml_idp/request'
 require 'saml_idp/logout_response_builder'
 module SamlIdp
   module Controller
-    extend ActiveSupport::Concern
-
-    included do
-      helper_method :saml_acs_url if respond_to? :helper_method
+    def self.included(base)
+      base.class_eval do
+        helper_method :saml_acs_url if respond_to? :helper_method
+      end
     end
 
     attr_accessor :algorithm
@@ -20,7 +20,7 @@ module SamlIdp
 
     def validate_saml_request(raw_saml_request = params[:SAMLRequest])
       decode_request(raw_saml_request)
-      render nothing: true, status: :forbidden unless valid_saml_request?
+      render :nothing => true, :status => :forbidden unless valid_saml_request?
     end
 
     def decode_request(raw_saml_request)
@@ -38,7 +38,6 @@ module SamlIdp
       opt_issuer_uri = opts[:issuer_uri] || issuer_uri
       my_authn_context_classref = opts[:authn_context_classref] || authn_context_classref
       expiry = opts[:expiry] || 60*60
-      encryption_opts = opts[:encryption] || nil
 
       SamlResponse.new(
         reference_id,
@@ -50,8 +49,7 @@ module SamlIdp
         saml_acs_url,
         (opts[:algorithm] || algorithm || default_algorithm),
         my_authn_context_classref,
-        expiry,
-        encryption_opts
+        expiry
       ).build
     end
 

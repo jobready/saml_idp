@@ -14,11 +14,10 @@ module SamlIdp
     attr_accessor :raw_algorithm
     attr_accessor :authn_context_classref
     attr_accessor :expiry
-    attr_accessor :encryption_opts
 
-    delegate :config, to: :SamlIdp
+    delegate :config, :to => :SamlIdp
 
-    def initialize(reference_id, issuer_uri, principal, audience_uri, saml_request_id, saml_acs_url, raw_algorithm, authn_context_classref, expiry=60*60, encryption_opts=nil)
+    def initialize(reference_id, issuer_uri, principal, audience_uri, saml_request_id, saml_acs_url, raw_algorithm, authn_context_classref, expiry=60*60)
       self.reference_id = reference_id
       self.issuer_uri = issuer_uri
       self.principal = principal
@@ -28,26 +27,25 @@ module SamlIdp
       self.raw_algorithm = raw_algorithm
       self.authn_context_classref = authn_context_classref
       self.expiry = expiry
-      self.encryption_opts = encryption_opts
     end
 
     def fresh
       builder = Builder::XmlMarkup.new
-      builder.Assertion xmlns: Saml::XML::Namespaces::ASSERTION,
-        ID: reference_string,
-        IssueInstant: now_iso,
-        Version: "2.0" do |assertion|
+      builder.Assertion :xmlns => Saml::XML::Namespaces::ASSERTION,
+        :ID => reference_string,
+        :IssueInstant => now_iso,
+        :Version => "2.0" do |assertion|
           assertion.Issuer issuer_uri
           sign assertion
           assertion.Subject do |subject|
-            subject.NameID name_id, Format: name_id_format[:name]
-            subject.SubjectConfirmation Method: Saml::XML::Namespaces::Methods::BEARER do |confirmation|
-              confirmation.SubjectConfirmationData "", InResponseTo: saml_request_id,
-                NotOnOrAfter: not_on_or_after_subject,
-                Recipient: saml_acs_url
+            subject.NameID name_id, :Format => name_id_format[:name]
+            subject.SubjectConfirmation :Method => Saml::XML::Namespaces::Methods::BEARER do |confirmation|
+              confirmation.SubjectConfirmationData "", :InResponseTo => saml_request_id,
+                :NotOnOrAfter => not_on_or_after_subject,
+                :Recipient => saml_acs_url
             end
           end
-          assertion.Conditions NotBefore: not_before, NotOnOrAfter: not_on_or_after_condition do |conditions|
+          assertion.Conditions :NotBefore => not_before, :NotOnOrAfter => not_on_or_after_condition do |conditions|
             conditions.AudienceRestriction do |restriction|
               restriction.Audience audience_uri
             end
@@ -56,9 +54,9 @@ module SamlIdp
             assertion.AttributeStatement do |attr_statement|
               asserted_attributes.each do |friendly_name, attrs|
                 attrs = (attrs || {}).with_indifferent_access
-                attr_statement.Attribute Name: attrs[:name] || friendly_name,
-                  NameFormat: attrs[:name_format] || Saml::XML::Namespaces::Formats::Attr::URI,
-                  FriendlyName: friendly_name.to_s do |attr|
+                attr_statement.Attribute :Name => attrs[:name] || friendly_name,
+                  :NameFormat => attrs[:name_format] || Saml::XML::Namespaces::Formats::Attr::URI,
+                  :FriendlyName => friendly_name.to_s do |attr|
                     values = get_values_for friendly_name, attrs[:getter]
                     values.each do |val|
                       attr.AttributeValue val.to_s
@@ -67,7 +65,7 @@ module SamlIdp
               end
             end
           end
-          assertion.AuthnStatement AuthnInstant: now_iso, SessionIndex: reference_string do |statement|
+          assertion.AuthnStatement :AuthnInstant => now_iso, :SessionIndex => reference_string do |statement|
             statement.AuthnContext do |context|
               context.AuthnContextClassRef authn_context_classref
             end
@@ -76,14 +74,6 @@ module SamlIdp
     end
     alias_method :raw, :fresh
     private :fresh
-
-    def encrypt(opts = {})
-      raise "Must set encryption_opts to encrypt" unless encryption_opts
-      raw_xml = opts[:sign] ? signed : raw
-      require 'saml_idp/encryptor'
-      encryptor = Encryptor.new encryption_opts
-      encryptor.encrypt(raw_xml)
-    end
 
     def asserted_attributes
       if principal.respond_to?(:asserted_attributes)
@@ -101,11 +91,11 @@ module SamlIdp
           result = getter.call(principal)
         else
           message = getter.to_s.underscore
-          result = principal.public_send(message) if principal.respond_to?(message)
+          result = principal.send(message) if principal.respond_to?(message)
         end
       elsif getter.nil?
         message = friendly_name.to_s.underscore
-        result = principal.public_send(message) if principal.respond_to?(message)
+        result = principal.send(message) if principal.respond_to?(message)
       end
       Array(result)
     end
@@ -121,7 +111,7 @@ module SamlIdp
       if getter.respond_to? :call
         getter
       else
-        ->(principal) { principal.public_send getter.to_s }
+        lambda { |principal| principal.send getter.to_s }
       end
     end
     private :name_id_getter

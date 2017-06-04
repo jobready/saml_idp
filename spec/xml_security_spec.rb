@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'xml_security'
 
 module SamlIdp
-  describe XMLSecurity, security: true do
+  describe XMLSecurity, :security => true do
     let(:document) { XMLSecurity::SignedDocument.new(Base64.decode64(response_document)) }
     let(:base64cert) { document.elements["//ds:X509Certificate"].text }
 
