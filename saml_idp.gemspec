@@ -37,7 +37,7 @@ Similarly, please see the README about certificates - you should avoid using the
 defaults in a Production environment. Post any issues you to github.
   INST
 
-  s.add_dependency('activesupport', '2.3.18')
+  s.add_dependency('activesupport', '~> 2.3')
   s.add_dependency('uuid', '~> 2.3')
   s.add_dependency('builder', '~> 3.0')
   s.add_dependency('httparty', '~> 0.11.0')
